@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SensorGnome · Background Demos</title>
+<style>
+:root {
+  --bg:       #0b120b;
+  --panel:    rgba(14,22,14,0.88);
+  --border:   #1e2e1e;
+  --text-dim: #3a5535;
+  --text-mid: #6a9062;
+  --text:     #9ac88a;
+  --accent:   #b8d8a0;
+  --amber:    #c8a840;
+  --mono:     'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  overflow: hidden;
+}
+
+/* ── control bar ── */
+#controls {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  border-radius: 2px;
+  backdrop-filter: blur(2px);
+}
+
+.tab {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  cursor: pointer;
+  border-radius: 1px;
+  transition: color 120ms, border-color 120ms, background 120ms;
+}
+.tab:hover  { color: var(--text-mid); border-color: var(--text-dim); }
+.tab.active { color: var(--accent); border-color: var(--text-mid); background: rgba(154,200,138,0.06); }
+
+/* ── overlay panels (simulate the real SG dashboard panels) ── */
+#overlay {
+  position: fixed;
+  inset: 56px 12px 12px 12px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 38% 62%;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.sim-col { display: flex; flex-direction: column; gap: 6px; }
+
+.sim-panel {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+}
+
+.sim-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid rgba(30,46,30,0.5);
+  padding-bottom: 4px;
+  margin-bottom: 2px;
+}
+
+.sim-line {
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  opacity: 0.7;
+}
+.sim-line .hi  { color: var(--text-mid); }
+.sim-line .val { color: var(--accent); }
+.sim-line .amb { color: var(--amber); }
+
+/* bottom info strip */
+#info {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<!-- ── tab bar ── -->
+<div id="controls">
+  <button class="tab active" data-bg="boids">Boids</button>
+  <button class="tab"        data-bg="vformation">V-Formation</button>
+  <button class="tab"        data-bg="forest">Parallax Forest</button>
+  <button class="tab"        data-bg="flapping">Flapping Birds</button>
+</div>
+
+<!-- ── simulated SG panels (semi-transparent so background shows through) ── -->
+<div id="overlay">
+  <div class="sim-col">
+    <div class="sim-panel" style="flex:0.55">
+      <div class="sim-label">Signal &amp; Noise Floor <span style="float:right;color:var(--text-dim)">166.380 MHz</span></div>
+      <div class="sim-line">─── chart area ─── <span class="val">snr 14.2dB</span></div>
+      <div class="sim-line" style="flex:1"></div>
+    </div>
+    <div class="sim-panel" style="flex:0.45">
+      <div class="sim-label">Pulse Stream <span style="float:right;color:var(--text-dim)">1842 pulses · 3 tags</span></div>
+      <div class="sim-line"><span class="hi">p1</span> 14:32:07  +0.12kHz  <span class="val">snr:15.1dB</span> <span style="color:var(--text-dim)">(−42.1/−57.2)</span></div>
+      <div class="sim-line"><span class="hi">p2</span> 14:32:08  −0.03kHz  <span class="val">snr:12.4dB</span></div>
+      <div class="sim-line amb">▶ TAG 14:32:11  id:0734  <span class="val">snr:16.0dB</span></div>
+      <div class="sim-line"><span class="hi">p1</span> 14:32:12  +0.07kHz  <span class="val">snr:14.8dB</span></div>
+      <div class="sim-line" style="opacity:0.3"><span class="hi">p3</span> 14:31:55  −0.22kHz  snr:9.1dB</div>
+    </div>
+  </div>
+
+  <div class="sim-col">
+    <div style="display:flex;gap:6px;flex:0.65;min-height:0">
+      <div class="sim-col" style="flex:1">
+        <div class="sim-panel">
+          <div class="sim-label">Pulse Rate / 10s <span style="float:right" class="val">18/10s</span></div>
+          <div class="sim-line">─── bar chart ───</div>
+        </div>
+        <div class="sim-panel">
+          <div class="sim-label">Noise Floor Trend <span style="float:right" class="val">−57.4dB</span></div>
+          <div class="sim-line">─── line chart ───</div>
+        </div>
+      </div>
+      <div class="sim-panel" style="flex:0 0 180px">
+        <div class="sim-label">Station</div>
+        <div class="sim-line">Waterloo, ON</div>
+        <div class="sim-line">43.4643°N 80.5204°W</div>
+        <div class="sim-line" style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--amber);font-size:9px;opacity:0.5">[ map ]</div>
+      </div>
+    </div>
+    <div class="sim-panel" style="flex:0.35">
+      <div class="sim-label">Station</div>
+      <div class="sim-line">
+        ID <span class="val">SG-189DRPZ20169</span> &nbsp;
+        LOC <span class="val">43.4643°N 80.5204°W · Waterloo, ON</span>
+      </div>
+      <div class="sim-line" style="margin-top:4px">
+        This receiver is part of the <span class="hi">MOTUS Wildlife Tracking System</span> — a hemispheric
+        network of automated radio stations operated by Birds Canada. Attached is a software-defined radio
+        tuned to <span class="val">166.380 MHz</span>, listening for coded Lotek NanoTags carried by
+        migratory birds, bats, and insects.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="info">panels at 88% opacity · background bleeds through edges &amp; between panels</div>
+
+<script type="module">
+import BoidsBG        from './boids.js';
+import VFormationBG   from './vformation.js';
+import ParallaxForestBG from './parallax-forest.js';
+import FlappingBirdsBG  from './flapping-birds.js';
+
+const CLASSES = {
+  boids:      BoidsBG,
+  vformation: VFormationBG,
+  forest:     ParallaxForestBG,
+  flapping:   FlappingBirdsBG,
+};
+
+let current = null;
+
+function activate(name) {
+  current?.destroy();
+  current = new CLASSES[name]().mount(document.body);
+}
+
+// Tab clicks
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activate(btn.dataset.bg);
+  });
+});
+
+// Start with boids
+activate('boids');
+</script>
+</body>
+</html>
