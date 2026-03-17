@@ -5,18 +5,26 @@
 ## Dashboard UI
 
 A real-time browser visualization of live radio telemetry data from the SensorGnome station. Zero frontend build tooling — pure vanilla JS ES modules, HTML5 Canvas, and a small Python backend.
-
+### Install Dependencies (uv)
+Install uv on macOS / Linux
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+Sync packages
+```bash
+uv sync
+```
 ### Running
 
 ```bash
 # Demo mode — synthetic pulses, no Pi required
 uv run server.py
 
-# Live mode — SSH-tails the Pi's data file in real time
-uv run server.py --live
+# Live mode — SSH-tails the Pi's data file in real time (make sure the ssh url is up to date)
+uv run server.py --live 
 
 # Custom port
-uv run server.py --port 9000
+uv run server.py --port 9000 
 ```
 
 Opens at `http://localhost:8000`. Hard-refresh (`Ctrl+Shift+R`) after any static file change to bypass browser cache.
