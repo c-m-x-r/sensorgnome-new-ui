@@ -162,8 +162,10 @@ function drawFrame() {
 }
 
 export function resizeMapCanvas() {
-  const body = document.querySelector('.globe-body');
-  const size = Math.min(body.clientWidth, body.clientHeight) - 12;
+  // Radius = 2/3 of screen height so the visible arc (20% of R deep, 13vh wide)
+  // spans ~80% of screen height.
+  const R    = Math.round(window.innerHeight * 2 / 3);
+  const size = R * 2;
   if (size < 50) return;
   mapCanvas.width  = size;
   mapCanvas.height = size;

@@ -18,9 +18,9 @@ export default class VFormationBG {
   constructor(opts = {}) {
     this._o = {
       color:    [154, 200, 138],
-      opacity:  0.28,
-      minBirds: 9,
-      maxBirds: 17,
+      opacity:  0,
+      minBirds: 3,
+      maxBirds: 5,
       minDelay: 6000,
       maxDelay: 20000,
       speed:    1.4,

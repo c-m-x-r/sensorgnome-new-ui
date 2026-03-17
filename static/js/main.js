@@ -2,7 +2,7 @@
 
 import { connectSSE }                        from './sse.js';
 import { pushPulseLine, pushTagLine }        from './stream.js';
-import { drawSNRChart, drawDetChart, drawNoiseChart } from './charts.js';
+import { drawDetChart, startChartAnimations } from './charts.js';
 import { resizeMapCanvas, startMapAnimation } from './map.js';
 
 // Clock
@@ -17,9 +17,7 @@ updateClock();
 connectSSE({
   onPulse(p) {
     pushPulseLine(p);
-    drawSNRChart();
-    drawDetChart();
-    drawNoiseChart();
+    drawDetChart(); // bars chart — no rAF loop, redraw on each pulse
   },
   onTag(t) {
     pushTagLine(t);
@@ -28,18 +26,15 @@ connectSSE({
 
 // Resize
 window.addEventListener('resize', () => {
-  drawSNRChart();
   drawDetChart();
-  drawNoiseChart();
   resizeMapCanvas();
 });
 
-// Initial draws
-drawSNRChart();
+// Initial draw for bars chart; SNR + noise run in rAF loops
 drawDetChart();
-drawNoiseChart();
 resizeMapCanvas();
 startMapAnimation();
+startChartAnimations();
 
 // Panel opacity — reduce to let background show through, e.g. ?opacity=0.6
 const _opacityParam = parseFloat(new URLSearchParams(location.search).get('opacity'));

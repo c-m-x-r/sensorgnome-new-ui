@@ -20,12 +20,30 @@
       <canvas id="snr-canvas"></canvas>
     </div>
 
-    <div class="panel stream-panel">
-      <div class="ph">
-        Pulse Stream
-        <span class="ph-right" id="ph-counts">0 pulses · 0 tags</span>
+    <div class="panel blurb-panel">
+      <div class="blurb-inner">
+        <div class="blurb-stats">
+          <span>ID <span class="stat-val" id="b-id">SG-189DRPZ20169</span></span>
+          <span>LOC <span class="stat-val">43.4643°N 80.5204°W · Waterloo, ON</span></span>
+          <span>GPS <span class="stat-val" id="b-gps">3D-fix</span></span>
+          <span>BOOT <span class="stat-val" id="b-boot">233</span></span>
+          <span>PULSES <span class="stat-val" id="b-pulses">0</span></span>
+          <span>TAGS <span class="stat-val" id="b-tags">0</span></span>
+          <span id="b-time" class="stat-val"></span>
+        </div>
+        <div class="blurb-text">
+          This receiver is part of the <strong>MOTUS Wildlife Tracking System</strong> — a
+          hemispheric network of automated radio stations operated by Birds Canada, spanning
+          North America from the Gulf of Mexico to the Arctic. Attached to the antenna is a
+          software-defined radio tuned to <strong>166.380 MHz</strong>, listening for coded
+          Lotek NanoTags carried by migratory birds, bats, and insects.
+          Each tag transmits a silent burst of four pulses every few seconds; the timing
+          between pulses encodes a unique animal ID via pulse-position modulation.
+          Confirmed detections are compressed, timestamped with GPS-disciplined precision, and
+          uploaded to <strong>motus.org</strong> where they join a continental movement record
+          used by ecologists to study migration corridors, stopover ecology, and species range shifts.
+        </div>
       </div>
-      <div id="stream-feed"></div>
     </div>
 
   </div>
@@ -53,30 +71,12 @@
 
     </div>
 
-    <div class="panel blurb-panel">
-      <div class="blurb-inner">
-        <div class="blurb-stats">
-          <span>ID <span class="stat-val" id="b-id">SG-189DRPZ20169</span></span>
-          <span>LOC <span class="stat-val">43.4643°N 80.5204°W · Waterloo, ON</span></span>
-          <span>GPS <span class="stat-val" id="b-gps">3D-fix</span></span>
-          <span>BOOT <span class="stat-val" id="b-boot">233</span></span>
-          <span>PULSES <span class="stat-val" id="b-pulses">0</span></span>
-          <span>TAGS <span class="stat-val" id="b-tags">0</span></span>
-          <span id="b-time" class="stat-val"></span>
-        </div>
-        <div class="blurb-text">
-          This receiver is part of the <strong>MOTUS Wildlife Tracking System</strong> — a
-          hemispheric network of automated radio stations operated by Birds Canada, spanning
-          North America from the Gulf of Mexico to the Arctic. Attached to the antenna is a
-          software-defined radio tuned to <strong>166.380 MHz</strong>, listening for coded
-          Lotek NanoTags carried by migratory birds, bats, and insects.
-          Each tag transmits a silent burst of four pulses every few seconds; the timing
-          between pulses encodes a unique animal ID via pulse-position modulation.
-          Confirmed detections are compressed, timestamped with GPS-disciplined precision, and
-          uploaded to <strong>motus.org</strong> where they join a continental movement record
-          used by ecologists to study migration corridors, stopover ecology, and species range shifts.
-        </div>
+    <div class="panel stream-panel">
+      <div class="ph">
+        Pulse Stream
+        <span class="ph-right" id="ph-counts">0 pulses · 0 tags</span>
       </div>
+      <div id="stream-feed"></div>
     </div>
 
   </div>

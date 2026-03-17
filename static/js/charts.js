@@ -62,8 +62,14 @@ export function drawSNRChart() {
   const yMin = -65, yMax = -20;
   const yScale = ch / (yMax - yMin);
 
+  // Time-based x: oldest point anchored to left edge, nowS to right edge.
+  // p.t is Unix seconds (Python time.time()).
+  const nowS   = Date.now() / 1000;
+  const t0     = pts.length > 0 ? pts[0].t : nowS - SIG_WINDOW;
+  const tSpan  = Math.max(nowS - t0, 1);
+
   function yp(val) { return PAD.t + (yMax - val) * yScale; }
-  function xp(i)   { return PAD.l + (i / (SIG_WINDOW - 1)) * cw; }
+  function xp(t)   { return PAD.l + ((t - t0) / tSpan) * cw; }
 
   // Y-axis label
   ctx.save();
@@ -90,8 +96,9 @@ export function drawSNRChart() {
   // X-axis labels
   ctx.font = '11px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
+  const spanLabel = tSpan >= 60 ? `−${Math.round(tSpan / 60)}m` : `−${Math.round(tSpan)}s`;
   ctx.textAlign = 'left';
-  ctx.fillText('−120s', PAD.l, h - 4);
+  ctx.fillText(spanLabel, PAD.l, h - 4);
   ctx.textAlign = 'right';
   ctx.fillText('now', w - PAD.r, h - 4);
   ctx.textAlign = 'center';
@@ -104,14 +111,20 @@ export function drawSNRChart() {
 
   if (pts.length < 2) return;
 
+  // Clip to plot area so time-scrolled lines don't bleed outside
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(PAD.l, PAD.t, cw, ch);
+  ctx.clip();
+
   // noise fill
   ctx.beginPath();
   pts.forEach((p, i) => {
-    const x = xp(SIG_WINDOW - pts.length + i), y = yp(p.noise);
+    const x = xp(p.t), y = yp(p.noise);
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
-  ctx.lineTo(xp(SIG_WINDOW - 1), PAD.t + ch);
-  ctx.lineTo(xp(SIG_WINDOW - pts.length), PAD.t + ch);
+  ctx.lineTo(xp(pts[pts.length - 1].t), PAD.t + ch);
+  ctx.lineTo(xp(pts[0].t), PAD.t + ch);
   ctx.closePath();
   ctx.fillStyle = 'rgba(58,85,53,0.18)';
   ctx.fill();
@@ -121,7 +134,7 @@ export function drawSNRChart() {
   ctx.lineWidth = 1;
   ctx.beginPath();
   pts.forEach((p, i) => {
-    const x = xp(SIG_WINDOW - pts.length + i), y = yp(p.noise);
+    const x = xp(p.t), y = yp(p.noise);
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
   ctx.stroke();
@@ -129,11 +142,11 @@ export function drawSNRChart() {
   // signal fill
   ctx.beginPath();
   pts.forEach((p, i) => {
-    const x = xp(SIG_WINDOW - pts.length + i), y = yp(p.sig);
+    const x = xp(p.t), y = yp(p.sig);
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
-  ctx.lineTo(xp(SIG_WINDOW - 1), PAD.t + ch);
-  ctx.lineTo(xp(SIG_WINDOW - pts.length), PAD.t + ch);
+  ctx.lineTo(xp(pts[pts.length - 1].t), PAD.t + ch);
+  ctx.lineTo(xp(pts[0].t), PAD.t + ch);
   ctx.closePath();
   ctx.fillStyle = 'rgba(154,200,138,0.10)';
   ctx.fill();
@@ -143,10 +156,12 @@ export function drawSNRChart() {
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   pts.forEach((p, i) => {
-    const x = xp(SIG_WINDOW - pts.length + i), y = yp(p.sig);
+    const x = xp(p.t), y = yp(p.sig);
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
   ctx.stroke();
+
+  ctx.restore(); // end clip
 
   // current SNR readout
   const last = pts[pts.length - 1];
@@ -239,6 +254,17 @@ export function drawNoiseChart() {
   const cw  = w - PAD.l - PAD.r;
   const ch  = h - PAD.t - PAD.b;
 
+  // Time-based x positioning for smooth continuous scroll.
+  // state.binStart is a JS timestamp (ms); WINDOW is 5 min in ms.
+  const now       = Date.now();
+  const WINDOW_MS = BIN_COUNT * 10000; // 5 min in ms
+
+  function xp(i) {
+    const slotsFromEnd = BIN_COUNT - 1 - i;
+    const ageMs = slotsFromEnd * 10000 + (now - state.binStart);
+    return PAD.l + Math.max(0, 1 - ageMs / WINDOW_MS) * cw;
+  }
+
   // Y-axis label
   ctx.save();
   ctx.translate(12, PAD.t + ch / 2);
@@ -272,7 +298,6 @@ export function drawNoiseChart() {
   const yMin = Math.min(...vals) - 3;
   const yMax = Math.max(...vals) + 3;
 
-  function xp(i)   { return PAD.l + (i / (BIN_COUNT - 1)) * cw; }
   function yp(val) { return PAD.t + (1 - (val - yMin) / (yMax - yMin)) * ch; }
 
   // Y-axis ticks
@@ -287,6 +312,12 @@ export function drawNoiseChart() {
     ctx.lineWidth = 0.5;
     ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(w - PAD.r, y); ctx.stroke();
   });
+
+  // Clip to plot area
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(PAD.l, PAD.t, cw, ch);
+  ctx.clip();
 
   // fill
   ctx.beginPath();
@@ -310,6 +341,23 @@ export function drawNoiseChart() {
   });
   ctx.stroke();
 
+  ctx.restore(); // end clip
+
   const last = validPts[validPts.length - 1];
   if (last) document.getElementById('ph-noise').textContent = last.v.toFixed(1) + 'dB';
+}
+
+// ── Continuous animation loops ───────────────────────────────────────────────
+
+export function startChartAnimations() {
+  function snrLoop() {
+    drawSNRChart();
+    requestAnimationFrame(snrLoop);
+  }
+  function noiseLoop() {
+    drawNoiseChart();
+    requestAnimationFrame(noiseLoop);
+  }
+  snrLoop();
+  noiseLoop();
 }

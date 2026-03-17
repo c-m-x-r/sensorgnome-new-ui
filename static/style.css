@@ -15,7 +15,7 @@
   --snr-mid:   #7a9e72;
   --snr-lo:    #c8a840;
   --mono:      'Courier New', 'Lucida Console', monospace;
-  --gap:       6px;
+  --gap:       10px;
   --radius:    2px;
 }
 
@@ -32,10 +32,11 @@ html, body {
 /* ── Layout ── */
 .layout {
   display: grid;
-  grid-template-columns: 1fr 1fr 30%;
-  grid-template-rows: 100vh;
+  grid-template-columns: 50vw 1fr 20vh;
+  grid-template-rows: calc(100vh - var(--gap) * 2);
   height: 100vh;
-  gap: 0;
+  gap: var(--gap);
+  padding: var(--gap);
   position: relative;
   z-index: 1;
 }
@@ -43,20 +44,17 @@ html, body {
 .col-left {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--border);
   gap: var(--gap);
-  padding: var(--gap);
 }
 
 .col-center {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
-  padding: var(--gap) var(--gap) var(--gap) 0;
 }
 
 .center-top {
-  flex: 0 0 65%;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
@@ -71,7 +69,6 @@ html, body {
 /* ── Globe column ── */
 .col-globe {
   position: relative;
-  border-left: 1px solid var(--border);
   background: rgba(10, 17, 10, var(--panel-alpha));
   display: flex;
   flex-direction: column;
@@ -79,14 +76,17 @@ html, body {
 }
 
 .globe-ph {
-  font-size: 13px;
-  letter-spacing: 0.18em;
+  font-size: 22px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-dim);
-  padding: 7px 12px 6px;
-  border-bottom: 1px solid var(--border-lo);
-  flex-shrink: 0;
-  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  white-space: nowrap;
+  z-index: 3;
+  pointer-events: none;
 }
 
 .globe-body {
@@ -98,8 +98,8 @@ html, body {
 #map-canvas {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: var(--gap);
+  transform: translateY(-50%);
 }
 
 /* ── Panel chrome ── */
@@ -113,11 +113,11 @@ html, body {
 }
 
 .ph {
-  font-size: 13px;
-  letter-spacing: 0.18em;
+  font-size: 22px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-dim);
-  padding: 7px 12px 6px;
+  padding: 10px 14px 9px;
   border-bottom: 1px solid var(--border-lo);
   flex-shrink: 0;
 }
@@ -126,12 +126,13 @@ html, body {
   float: right;
   color: var(--text-dim);
   letter-spacing: 0.06em;
-  font-size: 12px;
+  font-size: 18px;
 }
 
 /* ── Signal / Noise chart ── */
 .signal-panel {
-  flex: 55%;
+  flex: 0 0 auto;
+  aspect-ratio: 1;
   min-height: 0;
 }
 
@@ -143,7 +144,7 @@ html, body {
 
 /* ── Pulse stream ── */
 .stream-panel {
-  flex: 45%;
+  flex: 1;
   min-height: 0;
 }
 
@@ -195,7 +196,7 @@ html, body {
 
 /* ── Center plots ── */
 .plot-panel {
-  flex: 1;
+  flex: 0 0 25vw;
   min-height: 0;
 }
 
@@ -219,7 +220,7 @@ html, body {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  font-size: 13px;
+  font-size: 20px;
   color: var(--text-dim);
   letter-spacing: 0.06em;
 }
