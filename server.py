@@ -34,70 +34,6 @@ STATION = {
 
 PI_HOST = "gnome@172.20.10.2"
 
-# ── Mock tag database ──────────────────────────────────────────────────────────
-# Keyed by tag_id string. Fields mirror a simplified MOTUS tag registration.
-
-TAG_DB = {
-    "6621": {
-        "species":     "Swainson's Thrush",
-        "species_code":"SWTH",
-        "bander":      "M. Gahbauer · McGill Bird Observatory",
-        "deploy_site": "Ste-Anne-de-Bellevue, QC",
-        "deploy_lat":  45.429,
-        "deploy_lon":  -73.933,
-        "mass_g":      30.4,
-        "burst_s":     5.0,
-    },
-    "7432": {
-        "species":     "Yellow Warbler",
-        "species_code":"YWAR",
-        "bander":      "D. Hussell · Long Point Bird Observatory",
-        "deploy_site": "Long Point, ON",
-        "deploy_lat":  42.578,
-        "deploy_lon":  -80.402,
-        "mass_g":       9.6,
-        "burst_s":     6.7,
-    },
-    "8815": {
-        "species":     "Red Knot",
-        "species_code":"REKN",
-        "bander":      "L. Niles · Conserve Wildlife Foundation",
-        "deploy_site": "Delaware Bay, NJ",
-        "deploy_lat":  39.102,
-        "deploy_lon":  -75.348,
-        "mass_g":     150.0,
-        "burst_s":    10.3,
-    },
-    "5209": {
-        "species":     "Chimney Swift",
-        "species_code":"CHSW",
-        "bander":      "C. Graham · Birds Canada",
-        "deploy_site": "Guelph, ON",
-        "deploy_lat":  43.545,
-        "deploy_lon":  -80.249,
-        "mass_g":      22.8,
-        "burst_s":     8.1,
-    },
-    "3147": {
-        "species":     "Ruby-throated Hummingbird",
-        "species_code":"RTHU",
-        "bander":      "J. Valente · Hummer/Bird Study Group",
-        "deploy_site": "Powdermill, PA",
-        "deploy_lat":  40.165,
-        "deploy_lon":  -79.264,
-        "mass_g":       3.1,
-        "burst_s":    12.5,
-    },
-}
-
-
-def _enrich_tag(tag: dict) -> dict:
-    """Merge TAG_DB record into a tag event if the id is known."""
-    info = TAG_DB.get(str(tag.get("tag_id", "")))
-    if info:
-        tag = {**tag, **info}
-    return tag
-
 
 # ── Synthetic demo generator ───────────────────────────────────────────────────
 
@@ -129,11 +65,11 @@ async def demo_stream():
             burst  = random.choice([5.0, 6.7, 8.1, 10.3, 12.5])
             s      = round(random.gauss(-36.0, 5.0), 1)
             n      = round(s - random.gauss(13.0, 2.5), 1)
-            tag = _enrich_tag({
+            tag = {
                 "type": "tag", "ts": time.time(), "tag_id": tag_id,
                 "freq": STATION["freq"], "sig": s, "noise": n,
                 "snr": round(s - n, 1), "run": run, "burst": burst,
-            })
+            }
             yield f"data: {json.dumps(tag)}\n\n"
 
         await asyncio.sleep(random.uniform(0.05, 0.22))
@@ -216,8 +152,6 @@ async def live_stream():
                 break
             evt = _parse_line(line.decode().strip())
             if evt:
-                if evt.get("type") == "tag":
-                    evt = _enrich_tag(evt)
                 yield f"data: {json.dumps(evt)}\n\n"
     except asyncio.TimeoutError:
         pass
@@ -249,19 +183,6 @@ async def stream_endpoint(request: Request):
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
 
-
-@app.get("/tags")
-async def tags_list():
-    return TAG_DB
-
-
-@app.get("/tags/{tag_id}")
-async def tag_lookup(tag_id: str):
-    from fastapi.responses import JSONResponse
-    info = TAG_DB.get(tag_id)
-    if info is None:
-        return JSONResponse({"error": "unknown tag"}, status_code=404)
-    return info
 
 
 @app.get("/")

@@ -30,12 +30,12 @@
         <canvas id="det-canvas"></canvas>
       </div>
 
-      <div class="panel plot-panel">
+      <div class="panel stream-panel">
         <div class="ph">
-          Noise Floor
-          <span class="ph-right" id="ph-noise">—</span>
+          Pulse Stream
+          <span class="ph-right" id="ph-counts">0 pulses · 0 tags</span>
         </div>
-        <canvas id="noise-canvas"></canvas>
+        <div id="stream-feed"></div>
       </div>
 
     </div>
@@ -56,27 +56,62 @@
           <span>TAGS <span class="stat-val" id="b-tags">0</span></span>
           <span id="b-time" class="stat-val"></span>
         </div>
-        <div class="blurb-text">
-          This receiver is part of the <strong>MOTUS Wildlife Tracking System</strong> — a
-          hemispheric network of automated radio stations operated by Birds Canada, spanning
-          North America from the Gulf of Mexico to the Arctic. Attached to the antenna is a
-          software-defined radio tuned to <strong>166.380 MHz</strong>, listening for coded
-          Lotek NanoTags carried by migratory birds, bats, and insects.
-          Each tag transmits a silent burst of four pulses every few seconds; the timing
-          between pulses encodes a unique animal ID via pulse-position modulation.
-          Confirmed detections are compressed, timestamped with GPS-disciplined precision, and
-          uploaded to <strong>motus.org</strong> where they join a continental movement record
-          used by ecologists to study migration corridors, stopover ecology, and species range shifts.
+        <div class="pulse-card">
+          <div class="pulse-card-header">LATEST IDENTIFIED PULSE</div>
+          <div class="pulse-card-body">
+
+            <div class="pulse-profile">
+              <div class="pulse-name">Swainson's Thrush (#1588)</div>
+              <div class="pulse-sub">Hatch-year (unknown sex)</div>
+              <div class="pulse-sub">tagged by <span class="pulse-link">BC Interior Thrushes</span></div>
+              <div class="pulse-field-header">LAST DETECTED</div>
+              <div class="pulse-field-val">2026-03-19</div>
+              <div class="pulse-field-header">DEPLOYMENT DATE</div>
+              <div class="pulse-field-val">2015-10-11</div>
+              <div class="pulse-field-header">STATIONS VISITED</div>
+              <div class="pulse-field-val">7</div>
+              <div class="pulse-gif-slot">
+                <img src="static/assets/wireframeswainsonsthrush.gif" alt="Swainson's Thrush">
+              </div>
+            </div>
+
+            <div class="pulse-detections">
+              <div class="det-title">Latest Detections</div>
+              <div class="det-grid">
+                <span class="det-h">MOTUS STATION</span>
+                <span class="det-h">DETECTION DATE</span>
+                <span class="det-h">STOPOVER DURATION</span>
+                <span class="det-h">LOCATION</span>
+                <span>BFREE Belize</span>
+                <span>2026-03-19</span>
+                <span>66d 9h</span>
+                <span>BZ-TO</span>
+                <span>MDC HURLEY</span>
+                <span>2025-11-02</span>
+                <span>12d 4h</span>
+                <span>US-MO</span>
+                <span>Long Point Bird Obs.</span>
+                <span>2025-09-14</span>
+                <span>3d 2h</span>
+                <span>CA-ON</span>
+                <span>Manomet Shorebird</span>
+                <span>2025-08-31</span>
+                <span>1d 18h</span>
+                <span>US-MA</span>
+                <span>McGill Bird Obs.</span>
+                <span>2025-08-19</span>
+                <span>5d 11h</span>
+                <span>CA-QC</span>
+              </div>
+              <div class="pulse-img-slot">
+                <img src="static/assets/map.png" alt="Migration map">
+              </div>
+            </div>
+
+          </div>
+          <div class="pulse-media"></div>
         </div>
       </div>
-    </div>
-
-    <div class="panel stream-panel">
-      <div class="ph">
-        Pulse Stream
-        <span class="ph-right" id="ph-counts">0 pulses · 0 tags</span>
-      </div>
-      <div id="stream-feed"></div>
     </div>
 
   </div>
