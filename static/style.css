@@ -172,12 +172,14 @@ html, body {
 
 #stream-feed {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding: 6px 0 4px;
   min-height: 0;
+  scroll-behavior: smooth;
 }
 
 .pline {

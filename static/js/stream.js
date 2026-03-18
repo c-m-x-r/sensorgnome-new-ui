@@ -34,6 +34,12 @@ function appendLine(div) {
     const old = feed.querySelector('.pline');
     if (old) { old.remove(); lineCount--; }
   }
+
+  // Auto-scroll to bottom to show new content
+  // Use requestAnimationFrame to ensure DOM has updated before scrolling
+  requestAnimationFrame(() => {
+    feed.scrollTop = feed.scrollHeight;
+  });
 }
 
 export function pushPulseLine(p) {
