@@ -188,6 +188,11 @@ async def root():
     return HTMLResponse(Path("index.html").read_text())
 
 
+@app.get("/light")
+async def light():
+    return HTMLResponse(Path("light.html").read_text())
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SensorGnome Dashboard")
     parser.add_argument("--live", action="store_true", help="SSH-tail Pi files")

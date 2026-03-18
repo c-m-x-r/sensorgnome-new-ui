@@ -48,11 +48,17 @@ if (!isNaN(_opacityParam)) {
   document.documentElement.style.setProperty('--panel-alpha', clamped);
 }
 
-// Background animation — activate with ?bg=boids|vformation|parallax-forest|flapping-birds
+// Background animation — defaults to boids; override with ?bg=vformation|none
 const _BG_VALID = new Set(['boids', 'vformation', 'parallax-forest', 'flapping-birds']);
-const _bgParam  = new URLSearchParams(location.search).get('bg');
-if (_bgParam && _BG_VALID.has(_bgParam)) {
-  import(`/static/bg/${_bgParam}.js`)
-    .then(({ default: Bg }) => new Bg().mount(document.body))
+const _bgParam  = new URLSearchParams(location.search).get('bg') ?? 'boids';
+if (_bgParam !== 'none') {
+  const bgName = _BG_VALID.has(_bgParam) ? _bgParam : 'boids';
+  import(`/static/bg/${bgName}.js`)
+    .then(({ default: Bg }) => {
+      const opts = bgName === 'boids'
+        ? { count: 50, opacity: 0.10, speed: 0.5, size: 4.5, perception: 75, separation: 24 }
+        : {};
+      new Bg(opts).mount(document.body);
+    })
     .catch(e => console.warn('bg:', e));
 }

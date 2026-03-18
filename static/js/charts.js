@@ -21,7 +21,7 @@ function resizeCanvas(canvas) {
 }
 
 function drawDotGrid(ctx, w, h) {
-  ctx.fillStyle = '#142014';
+  ctx.fillStyle = C('--canvas-dot');
   const step = 18;
   for (let x = 4; x < w; x += step)
     for (let y = 4; y < h; y += step)
@@ -55,7 +55,7 @@ export function drawSNRChart() {
   drawDotGrid(ctx, w, h);
 
   const pts = state.signals;
-  const PAD = { t: 14, b: 30, l: 46, r: 10 };
+  const PAD = { t: 14, b: 36, l: 52, r: 10 };
   const cw  = w - PAD.l - PAD.r;
   const ch  = h - PAD.t - PAD.b;
 
@@ -70,25 +70,25 @@ export function drawSNRChart() {
   ctx.translate(12, PAD.t + ch / 2);
   ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center';
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.fillText('dBFS', 0, 0);
   ctx.restore();
 
   // Y-axis ticks + gridlines
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.textAlign = 'right';
   for (const v of [-60, -50, -40, -30]) {
     const y = yp(v);
     ctx.fillText(v, PAD.l - 4, y + 4);
-    ctx.strokeStyle = '#1a281a';
+    ctx.strokeStyle = C('--canvas-grid');
     ctx.lineWidth = 0.5;
     ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(w - PAD.r, y); ctx.stroke();
   }
 
   // X-axis labels
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.textAlign = 'left';
   ctx.fillText('−120s', PAD.l, h - 4);
@@ -98,7 +98,7 @@ export function drawSNRChart() {
   ctx.fillText('time →', PAD.l + cw / 2, h - 4);
 
   // Legend
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   drawLegendItem(ctx, PAD.l + 4, PAD.t + 12, C('--accent'),   'signal', false);
   drawLegendItem(ctx, PAD.l + 4, PAD.t + 26, C('--text-dim'), 'noise',  false);
 
@@ -113,7 +113,7 @@ export function drawSNRChart() {
   ctx.lineTo(xp(SIG_WINDOW - 1), PAD.t + ch);
   ctx.lineTo(xp(SIG_WINDOW - pts.length), PAD.t + ch);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(58,85,53,0.18)';
+  ctx.fillStyle = C('--canvas-noise-fill');
   ctx.fill();
 
   // noise line
@@ -135,7 +135,7 @@ export function drawSNRChart() {
   ctx.lineTo(xp(SIG_WINDOW - 1), PAD.t + ch);
   ctx.lineTo(xp(SIG_WINDOW - pts.length), PAD.t + ch);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(154,200,138,0.10)';
+  ctx.fillStyle = C('--canvas-sig-fill');
   ctx.fill();
 
   // signal line
@@ -152,7 +152,7 @@ export function drawSNRChart() {
   const last = pts[pts.length - 1];
   if (last) {
     ctx.textAlign = 'right';
-    ctx.font = '12px ' + C('--mono');
+    ctx.font = '24px ' + C('--mono');
     ctx.fillStyle = last.snr >= 15 ? C('--snr-hi') : last.snr >= 8 ? C('--snr-mid') : C('--snr-lo');
     ctx.fillText('snr ' + last.snr.toFixed(1) + 'dB', w - PAD.r, PAD.t + 14);
   }
@@ -180,19 +180,19 @@ export function drawDetChart() {
   ctx.translate(12, PAD.t + ch / 2);
   ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center';
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.fillText('pulses', 0, 0);
   ctx.restore();
 
   // Y-axis ticks
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.textAlign = 'right';
   [Math.round(maxV * 0.5), maxV].forEach(v => {
     const y = PAD.t + ch - (v / maxV) * ch;
     ctx.fillText(v, PAD.l - 4, y + 4);
-    ctx.strokeStyle = '#1a281a';
+    ctx.strokeStyle = C('--canvas-grid');
     ctx.lineWidth = 0.5;
     ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(w - PAD.r, y); ctx.stroke();
   });
@@ -204,12 +204,12 @@ export function drawDetChart() {
     const x     = PAD.l + i * bw;
     const y     = PAD.t + ch - bh;
     const alpha = 0.35 + 0.65 * (i / BIN_COUNT);
-    ctx.fillStyle = `rgba(154,200,138,${alpha})`;
+    ctx.fillStyle = `rgba(${C('--bar-rgb')},${alpha})`;
     ctx.fillRect(x + 1, y, bw - 2, bh);
   });
 
   // X-axis labels
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.textAlign = 'left';
   ctx.fillText('−5 min', PAD.l, h - 4);
@@ -219,8 +219,8 @@ export function drawDetChart() {
   ctx.fillText('time →', PAD.l + cw / 2, h - 4);
 
   // Legend
-  ctx.font = '11px ' + C('--mono');
-  drawLegendItem(ctx, PAD.l + 4, PAD.t + 12, 'rgba(154,200,138,0.85)', 'pulse count', true);
+  ctx.font = '22px ' + C('--mono');
+  drawLegendItem(ctx, PAD.l + 4, PAD.t + 12, `rgba(${C('--bar-rgb')},0.85)`, 'pulse count', true);
 
   document.getElementById('ph-rate').textContent = bins[BIN_COUNT - 1] + '/10s';
 }
@@ -235,7 +235,7 @@ export function drawNoiseChart() {
   ctx.clearRect(0, 0, w, h);
   drawDotGrid(ctx, w, h);
 
-  const PAD = { t: 14, b: 30, l: 46, r: 10 };
+  const PAD = { t: 14, b: 36, l: 52, r: 10 };
   const cw  = w - PAD.l - PAD.r;
   const ch  = h - PAD.t - PAD.b;
 
@@ -244,13 +244,13 @@ export function drawNoiseChart() {
   ctx.translate(12, PAD.t + ch / 2);
   ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center';
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.fillText('dBFS', 0, 0);
   ctx.restore();
 
   // X-axis labels
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.textAlign = 'left';
   ctx.fillText('−5 min', PAD.l, h - 4);
@@ -260,7 +260,7 @@ export function drawNoiseChart() {
   ctx.fillText('time →', PAD.l + cw / 2, h - 4);
 
   // Legend
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   drawLegendItem(ctx, PAD.l + 4, PAD.t + 12, C('--text-mid'), 'noise floor', false);
 
   const validPts = state.noiseBins
@@ -276,14 +276,14 @@ export function drawNoiseChart() {
   function yp(val) { return PAD.t + (1 - (val - yMin) / (yMax - yMin)) * ch; }
 
   // Y-axis ticks
-  ctx.font = '11px ' + C('--mono');
+  ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.textAlign = 'right';
   const mid = (yMin + yMax) / 2;
   [yMin + 1, mid, yMax - 1].forEach(v => {
     const y = yp(v);
     ctx.fillText(Math.round(v), PAD.l - 4, y + 4);
-    ctx.strokeStyle = '#1a281a';
+    ctx.strokeStyle = C('--canvas-grid');
     ctx.lineWidth = 0.5;
     ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(w - PAD.r, y); ctx.stroke();
   });
@@ -297,7 +297,7 @@ export function drawNoiseChart() {
   ctx.lineTo(xp(validPts[validPts.length - 1].i), PAD.t + ch);
   ctx.lineTo(xp(validPts[0].i), PAD.t + ch);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(58,85,53,0.22)';
+  ctx.fillStyle = C('--canvas-noise2');
   ctx.fill();
 
   // line

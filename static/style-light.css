@@ -1,0 +1,39 @@
+@import url('/static/style.css');
+
+:root {
+  --bg:          #f0f4ef;
+  --panel:       #ffffff;
+  --panel-alt:   #f4f8f3;
+  --border:      #c0d4bc;
+  --border-lo:   #d8e8d4;
+  --text-dim:    #7a9a72;
+  --text-mid:    #4a7040;
+  --text-main:   #1e4018;
+  --accent:      #2a5a20;
+  --accent-hi:   #0e3808;
+  --amber:       #8a6010;
+  --snr-hi:      #2a5a20;
+  --snr-mid:     #5a8050;
+  --snr-lo:      #8a6010;
+  --panel-bg: rgba(255, 255, 255, var(--panel-alpha));
+  --globe-bg: rgba(244, 248, 243, var(--panel-alpha));
+  /* canvas chart colors */
+  --canvas-dot:        #e4eee4;
+  --canvas-grid:       #d0e0d0;
+  --canvas-noise-fill: rgba(100,140,90,0.15);
+  --canvas-sig-fill:   rgba(30,80,20,0.08);
+  --canvas-noise2:     rgba(100,140,90,0.18);
+  --bar-rgb:           50,120,40;
+  --amber-rgb:         138,96,16;
+  /* map colors */
+  --map-land:       rgba(50,120,40,0.15);
+  --map-land-dot:   rgba(50,120,40,0.08);
+  --map-water:      #b8d4cc;
+  --map-shore:      rgba(50,120,40,0.55);
+  --map-border:     rgba(50,120,40,0.30);
+  --map-label:      rgba(20,70,10,0.70);
+  --map-motus:      rgba(40,100,30,0.90);
+  --map-city:       rgba(40,100,30,0.50);
+  --map-circle:     rgba(50,120,40,0.40);
+  --map-dot-stroke: #b8d4cc;
+}

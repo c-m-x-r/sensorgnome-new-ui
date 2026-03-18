@@ -1,5 +1,8 @@
 // Globe map — equirectangular projection, animated station rings, responsive sizing
 
+const CSS = getComputedStyle(document.documentElement);
+const C   = (v) => CSS.getPropertyValue(v).trim();
+
 const MAP = { latMin: 41.5, latMax: 46.8, lonMin: -84.5, lonMax: -74.0 };
 let MAP_SIZE = 480;
 
@@ -48,10 +51,10 @@ function buildStaticMap(size) {
   const ctx = offMap.getContext('2d');
 
   // Land — matches bar chart green palette
-  ctx.fillStyle = 'rgba(154,200,138,0.18)';
+  ctx.fillStyle = C('--map-land');
   ctx.fillRect(0, 0, size, size);
 
-  ctx.fillStyle = 'rgba(154,200,138,0.06)';
+  ctx.fillStyle = C('--map-land-dot');
   for (let x = 6; x < size; x += 20)
     for (let y = 6; y < size; y += 20)
       ctx.fillRect(x, y, 1, 1);
@@ -64,15 +67,15 @@ function buildStaticMap(size) {
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.closePath();
-    ctx.fillStyle   = '#070e07';
+    ctx.fillStyle   = C('--map-water');
     ctx.fill();
-    ctx.strokeStyle = 'rgba(154,200,138,0.35)';
+    ctx.strokeStyle = C('--map-shore');
     ctx.lineWidth   = 1;
     ctx.stroke();
   });
 
   // Canada/US border
-  ctx.strokeStyle = 'rgba(154,200,138,0.15)';
+  ctx.strokeStyle = C('--map-border');
   ctx.lineWidth   = 0.8;
   ctx.setLineDash([3, 6]);
   ctx.beginPath();
@@ -92,11 +95,11 @@ function buildStaticMap(size) {
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(Math.PI / 4);
-    ctx.fillStyle = p.type === 'motus' ? 'rgba(154,200,138,0.7)' : 'rgba(154,200,138,0.35)';
+    ctx.fillStyle = p.type === 'motus' ? C('--map-motus') : C('--map-city');
     ctx.fillRect(-ms / 2, -ms / 2, ms, ms);
     ctx.restore();
     ctx.font      = `${fontSize}px Courier New, monospace`;
-    ctx.fillStyle = 'rgba(154,200,138,0.55)';
+    ctx.fillStyle = C('--map-label');
     ctx.textAlign = 'left';
     ctx.fillText(p.label, x + fontSize * 0.8, y + fontSize * 0.4);
   });
@@ -127,7 +130,7 @@ function drawFrame() {
   [t, t2].forEach(tt => {
     ctx.beginPath();
     ctx.arc(sx, sy, ringR * tt, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(200,168,64,${0.8 * (1 - tt)})`;
+    ctx.strokeStyle = `rgba(${C('--amber-rgb')},${0.8 * (1 - tt)})`;
     ctx.lineWidth   = 2;
     ctx.stroke();
   });
@@ -136,16 +139,16 @@ function drawFrame() {
   const dotR = Math.max(3, S / 110);
   ctx.beginPath();
   ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
-  ctx.fillStyle   = '#c8a840';
+  ctx.fillStyle   = C('--amber');
   ctx.fill();
-  ctx.strokeStyle = '#070e07';
+  ctx.strokeStyle = C('--map-dot-stroke');
   ctx.lineWidth   = 1;
   ctx.stroke();
 
   // Station label
   const lfs = Math.round(S / 40);
   ctx.font      = `bold ${lfs}px Courier New, monospace`;
-  ctx.fillStyle = '#c8a840';
+  ctx.fillStyle = C('--amber');
   ctx.textAlign = 'left';
   ctx.fillText('Waterloo', sx + dotR + 3, sy - dotR - 2);
 
@@ -154,7 +157,7 @@ function drawFrame() {
   // Circle border
   ctx.beginPath();
   ctx.arc(R, R, R - 1, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(154,200,138,0.25)';
+  ctx.strokeStyle = C('--map-circle');
   ctx.lineWidth   = 1.5;
   ctx.stroke();
 
@@ -163,7 +166,7 @@ function drawFrame() {
 
 export function resizeMapCanvas() {
   const body = document.querySelector('.globe-body');
-  const size = Math.min(body.clientWidth, body.clientHeight) - 12;
+  const size = body.clientHeight - 12;
   if (size < 50) return;
   mapCanvas.width  = size;
   mapCanvas.height = size;
