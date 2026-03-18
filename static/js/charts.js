@@ -230,6 +230,7 @@ export function drawDetChart() {
 const noiseCanvas = document.getElementById('noise-canvas');
 
 export function drawNoiseChart() {
+  if (!noiseCanvas) return;
   const { w, h } = resizeCanvas(noiseCanvas);
   const ctx = noiseCanvas.getContext('2d');
   ctx.clearRect(0, 0, w, h);
