@@ -3,7 +3,6 @@
 import { connectSSE }                        from './sse.js';
 import { pushPulseLine, pushTagLine }        from './stream.js';
 import { drawSNRChart, drawDetChart, drawNoiseChart } from './charts.js';
-import { resizeMapCanvas, startMapAnimation } from './map.js';
 
 // Clock
 function updateClock() {
@@ -31,15 +30,12 @@ window.addEventListener('resize', () => {
   drawSNRChart();
   drawDetChart();
   drawNoiseChart();
-  resizeMapCanvas();
 });
 
 // Initial draws
 drawSNRChart();
 drawDetChart();
 drawNoiseChart();
-resizeMapCanvas();
-startMapAnimation();
 
 // Panel opacity — reduce to let background show through, e.g. ?opacity=0.6
 const _opacityParam = parseFloat(new URLSearchParams(location.search).get('opacity'));
