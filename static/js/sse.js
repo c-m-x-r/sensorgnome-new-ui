@@ -4,7 +4,7 @@
 import { state, advanceBins, updateCounts } from './state.js';
 
 export function connectSSE({ onPulse, onTag, onStatus, onGPS } = {}) {
-  const es = new EventSource('/stream');
+  const es = new EventSource(new URL('stream', window.location.href).href);
 
   es.onmessage = (e) => {
     const evt = JSON.parse(e.data);
