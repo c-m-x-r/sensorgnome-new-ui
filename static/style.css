@@ -138,6 +138,9 @@ html, body {
 }
 
 .ph {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 39px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -151,7 +154,7 @@ html, body {
   float: right;
   color: var(--text-mid);
   letter-spacing: 0.06em;
-  font-size: 36px;
+  font-size: 33px;
 }
 
 /* ── Signal / Noise chart ── */
@@ -165,6 +168,7 @@ html, body {
   min-height: 0;
   flex: 1;
   display: block;
+  padding: 8px;
 }
 
 /* ── Pulse stream ── */
@@ -176,6 +180,15 @@ html, body {
 .stream-panel {
   flex: 1;
   min-height: 0;
+}
+
+.stream-panel > .ph {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pline > span {
+  font-size: 16px;
 }
 
 #stream-feed {
@@ -239,6 +252,7 @@ html, body {
   min-height: 0;
   flex: 1;
   display: block;
+  padding: 8px;
 }
 
 /* ── Blurb ── */

@@ -55,7 +55,7 @@ export function drawSNRChart() {
   drawDotGrid(ctx, w, h);
 
   const pts = state.signals;
-  const PAD = { t: 14, b: 36, l: 52, r: 10 };
+  const PAD = { t: 14, b: 36, l: 80, r: 10 };
   const cw  = w - PAD.l - PAD.r;
   const ch  = h - PAD.t - PAD.b;
 
@@ -67,9 +67,10 @@ export function drawSNRChart() {
 
   // Y-axis label
   ctx.save();
-  ctx.translate(12, PAD.t + ch / 2);
+  ctx.translate(22, PAD.t + ch / 2);
   ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center';
+  ctx.textBaselin = 'middle';
   ctx.font = '22px ' + C('--mono');
   ctx.fillStyle = C('--text-dim');
   ctx.fillText('dBFS', 0, 0);
@@ -100,7 +101,7 @@ export function drawSNRChart() {
   // Legend
   ctx.font = '22px ' + C('--mono');
   drawLegendItem(ctx, PAD.l + 4, PAD.t + 12, C('--accent'),   'signal', false);
-  drawLegendItem(ctx, PAD.l + 4, PAD.t + 26, C('--text-dim'), 'noise',  false);
+  drawLegendItem(ctx, PAD.l + 4, PAD.t + 40, C('--text-dim'), 'noise',  false);
 
   if (pts.length < 2) return;
 
@@ -170,14 +171,14 @@ export function drawDetChart() {
 
   const bins = state.pulseBins;
   const maxV = Math.max(...bins, 1);
-  const PAD  = { t: 14, b: 30, l: 46, r: 10 };
+  const PAD  = { t: 60, b: 30, l: 46, r: 10 };
   const cw   = w - PAD.l - PAD.r;
   const ch   = h - PAD.t - PAD.b;
   const bw   = cw / BIN_COUNT;
 
   // Y-axis label
   ctx.save();
-  ctx.translate(12, PAD.t + ch / 2);
+  ctx.translate(18, PAD.t + ch / 2);
   ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center';
   ctx.font = '22px ' + C('--mono');
@@ -191,7 +192,7 @@ export function drawDetChart() {
   ctx.textAlign = 'right';
   [Math.round(maxV * 0.5), maxV].forEach(v => {
     const y = PAD.t + ch - (v / maxV) * ch;
-    ctx.fillText(v, PAD.l - 4, y + 4);
+    ctx.fillText(v, PAD.l + 8, y + 4);
     ctx.strokeStyle = C('--canvas-grid');
     ctx.lineWidth = 0.5;
     ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(w - PAD.r, y); ctx.stroke();
@@ -220,7 +221,7 @@ export function drawDetChart() {
 
   // Legend
   ctx.font = '22px ' + C('--mono');
-  drawLegendItem(ctx, PAD.l + 4, PAD.t + 12, `rgba(${C('--bar-rgb')},0.85)`, 'pulse count', true);
+  drawLegendItem(ctx, PAD.l + 20, PAD.t - 35, `rgba(${C('--bar-rgb')},0.85)`, 'pulse count', true);
 
   document.getElementById('ph-rate').textContent = bins[BIN_COUNT - 1] + '/10s';
 }
